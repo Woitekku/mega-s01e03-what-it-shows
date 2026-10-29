@@ -13,9 +13,12 @@ signature: Woitekku
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-[#4471](/kb/incidents/4471/) holds every report about dates as one issue: the parser reads dates
+[#4471](/kb/incidents/4471/) held every report about dates as one issue: the parser reads dates
 month first. Read by tenant, and by what each report says, the reports show more than one bug.
-Each one now has a ticket of its own.
+Each one has a ticket of its own.
+
+Engineering closed #4471 on 5 October: the parser fix shipped, and the booking-v3 form is retired.
+That closes two of the problems. The one-day moves are still open.
 
 <ProblemTable
   ticket={4471}
@@ -27,7 +30,7 @@ Each one now has a ticket of its own.
 />
 
 <Callout kind="warn">
-Not one fix. Fixing the parser leaves the hint and the one-day moves open.
+#4471 is closed, the one-day moves are not. Neither the parser fix nor retiring booking-v3 reaches them.
 </Callout>
 
 ## `parser` · the shared parser reads dates month first
@@ -36,7 +39,8 @@ Tenants who write the day first get their dates back with day and month swapped:
 reminder went out on 4 July." It reaches every day-first tenant, through the app, email and the
 booking-v2 form, whose hint already asks for the day first.
 
-Fix: read dates in the tenant's order.
+**Fixed.** `fix(dates): parse dd/mm for eu locales` reads dates in the tenant's order; #4471 closed
+on 5 October. Ticket closed as completed.
 
 ## `hint` · booking-v3 tells day-first tenants to type the month first
 
@@ -44,16 +48,17 @@ booking-v3 prints `MM/DD/YYYY` under its date field. People type what the hint t
 form reads it the tenant's way, day first: the same swap, from a different bug. Only form reports
 from tenants on booking-v3 have it. A parser fix does not reach it.
 
-Fix: print the hint in the tenant's order, or read the field in the order the hint asks for.
+**Won't fix.** The booking-v3 form is retired, and its hint with it. Ticket closed as not planned.
 
 ## `one-day` · dates move by one day
 
 These reports show no swap. "Invite says Tuesday 12 May. Calendar says Monday 11 May." "Client in
 Lisbon got Tuesday. Client in Toronto got Monday. Same meeting." Swapping day and month cannot move
 a date by one day; turning a date into a time in one zone and back in another can. The desk noted
-them in `desk-notes.json` (`oneDayMove`), and the kb went on counting them under `parser` by tenant.
+them in `desk-notes.json` (`oneDayMove`) and files them under `parser` by tenant.
 
-Fix: find where a booking's date passes through a time zone; keep it a calendar date.
+**Open.** The parser fix does not change a date by one day, and none of these came through a booking
+form. Next: find where a booking's date passes through a time zone, and keep it a calendar date.
 
 ## Why they ended up in one ticket
 
@@ -65,8 +70,10 @@ Fix: find where a booking's date passes through a time zone; keep it a calendar 
 
 ## Counting
 
-The table is built from `reports-4471.json`, the tenant directory and `desk-notes.json` at render
-time, so it follows the desk as reports and notes come in. A report from a tenant the directory
-does not know shows up as `unplaced`, without a ticket, until someone files it.
+The table counts the desk's way, with the kb's own logic as exported: each report once, under the
+cause its tenant files it under. The one-day moves keep their place there and get a row of their
+own as well. It is built from `reports-4471.json`, the tenant directory and `desk-notes.json` at
+render time, so it follows the desk as reports and notes come in. A report from a tenant the
+directory does not know shows up as `unplaced`, without a ticket, until someone files it.
 
 <RenderStamp {signature} />
