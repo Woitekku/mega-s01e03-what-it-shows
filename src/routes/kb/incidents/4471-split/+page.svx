@@ -4,7 +4,7 @@ title: '#4471 · what the reports show'
 owner: support desk
 status: open
 reviewed: 2026-10-29
-signature: Woitekku
+signature: 'v1.eyJzdWIiOiI2MDA0IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMzMTQzODUsImV4cCI6MTc5MzQwMDc4NX0.milGt9p9fpCbtCzRplxj-ZfcwOa8cEsJN5rYnQqhZZ8'
 ---
 
 <script>

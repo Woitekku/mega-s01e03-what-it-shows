@@ -40,7 +40,7 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 `#4471` merged every date report as one issue. Its reports show three problems, each now an issue
 in this repo: #1 `parser`, #2 `hint`, #3 `one-day`.
 
-- The page: `src/routes/kb/incidents/4471-split/+page.svx`, signed `Woitekku`.
+- The page: `src/routes/kb/incidents/4471-split/+page.svx`, signed with the course ticket.
 - Its logic: `src/lib/kb/problems.ts` and `src/lib/kb/ProblemTable.svelte`.
 - The page as the desk sees it: `rendered/kb/incidents/4471-split/index.html`. Every kb page is
   rendered under `rendered/`.
