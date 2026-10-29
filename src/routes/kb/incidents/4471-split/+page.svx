@@ -1,0 +1,72 @@
+---
+layout: runbook
+title: '#4471 · what the reports show'
+owner: support desk
+status: open
+reviewed: 2026-10-29
+signature: Woitekku
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471/) holds every report about dates as one issue: the parser reads dates
+month first. Read by tenant, and by what each report says, the reports show more than one bug.
+Each one now has a ticket of its own.
+
+<ProblemTable
+  ticket={4471}
+  tickets={{
+    parser: 'https://github.com/Woitekku/mega-s01e03-what-it-shows/issues/1',
+    hint: 'https://github.com/Woitekku/mega-s01e03-what-it-shows/issues/2',
+    'one-day': 'https://github.com/Woitekku/mega-s01e03-what-it-shows/issues/3',
+  }}
+/>
+
+<Callout kind="warn">
+Not one fix. Fixing the parser leaves the hint and the one-day moves open.
+</Callout>
+
+## `parser` · the shared parser reads dates month first
+
+Tenants who write the day first get their dates back with day and month swapped: "Our 7 April
+reminder went out on 4 July." It reaches every day-first tenant, through the app, email and the
+booking-v2 form, whose hint already asks for the day first.
+
+Fix: read dates in the tenant's order.
+
+## `hint` · booking-v3 tells day-first tenants to type the month first
+
+booking-v3 prints `MM/DD/YYYY` under its date field. People type what the hint tells them, and the
+form reads it the tenant's way, day first: the same swap, from a different bug. Only form reports
+from tenants on booking-v3 have it. A parser fix does not reach it.
+
+Fix: print the hint in the tenant's order, or read the field in the order the hint asks for.
+
+## `one-day` · dates move by one day
+
+These reports show no swap. "Invite says Tuesday 12 May. Calendar says Monday 11 May." "Client in
+Lisbon got Tuesday. Client in Toronto got Monday. Same meeting." Swapping day and month cannot move
+a date by one day; turning a date into a time in one zone and back in another can. The desk noted
+them in `desk-notes.json` (`oneDayMove`), and the kb went on counting them under `parser` by tenant.
+
+Fix: find where a booking's date passes through a time zone; keep it a calendar date.
+
+## Why they ended up in one ticket
+
+- Triage merges on the subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject/)).
+  The same subjects come in for every problem, so the subject cannot tell them apart.
+- Intake tags a report from the reporter's browser. The cause depends on the tenant: where they
+  are and which booking form they run. Compare "tagged as" with "problem" above.
+- The ticket export pages overlap, so a raw count of the export runs high.
+
+## Counting
+
+The table is built from `reports-4471.json`, the tenant directory and `desk-notes.json` at render
+time, so it follows the desk as reports and notes come in. A report from a tenant the directory
+does not know shows up as `unplaced`, without a ticket, until someone files it.
+
+<RenderStamp {signature} />
